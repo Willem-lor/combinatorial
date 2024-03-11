@@ -1,0 +1,105 @@
+name: Autograding Tests
+'on':
+- push
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/josse-classroom-test/dep-1234:latest 
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: tb_mux2
+      id: tb_mux2
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: tb_mux2
+        setup-command: ''
+        command: make simulate_tb_mux2 -C opgave
+        timeout: 10
+        max-score: 10
+    - name: tb_mux4
+      id: tb_mux4
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: tb_mux4
+        setup-command: ''
+        command: make simulate_tb_mux4 -C opgave
+        timeout: 10
+        max-score: 10
+    - name: tb_mux8
+      id: tb_mux8
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: tb_mux8
+        setup-command: ''
+        command: make simulate_tb_mux8 -C opgave
+        timeout: 10
+        max-score: 10
+    - name: tb_fulladder
+      id: tb_fulladder
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: tb_fulladder
+        setup-command: ''
+        command: make simulate_tb_fulladder -C opgave
+        timeout: 10
+        max-score: 10
+    - name: tb_ripplecarry
+      id: tb_ripplecarry
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: tb_ripplecarry
+        setup-command: ''
+        command: make simulate_tb_ripplecarry -C opgave
+        timeout: 10
+        max-score: 10
+    - name: tb_multiplier
+      id: tb_multiplier
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: tb_multiplier
+        setup-command: ''
+        command: make simulate_tb_multiplier -C opgave
+        timeout: 10
+        max-score: 10
+    - name: tb_alu
+      id: tb_alu
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: tb_alu
+        setup-command: ''
+        command: make simulate_tb_alu -C opgave
+        timeout: 10
+        max-score: 10
+    - name: style
+      id: style
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: style
+        setup-command: ''
+        command: make lint -C opgave
+        timeout: 10
+        max-score: 10
+    - name: Autograding Reporter
+      uses: education/autograding-grading-reporter@v1
+      env:
+        TB_MUX2_RESULTS: "${{steps.tb_mux2.outputs.result}}"
+        TB_MUX4_RESULTS: "${{steps.tb_mux4.outputs.result}}"
+        TB_MUX8_RESULTS: "${{steps.tb_mux8.outputs.result}}"
+        TB_FULLADDER_RESULTS: "${{steps.tb_fulladder.outputs.result}}"
+        TB_RIPPLECARRY_RESULTS: "${{steps.tb_ripplecarry.outputs.result}}"
+        TB_MULTIPLIER_RESULTS: "${{steps.tb_multiplier.outputs.result}}"
+        TB_ALU_RESULTS: "${{steps.tb_alu.outputs.result}}"
+        STYLE_RESULTS: "${{steps.style.outputs.result}}"
+      with:
+        runners: tb_mux2,tb_mux4,tb_mux8,tb_fulladder,tb_ripplecarry,tb_multiplier,tb_alu,style
+
+

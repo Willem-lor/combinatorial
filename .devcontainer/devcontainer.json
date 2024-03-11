@@ -1,0 +1,13 @@
+{
+  "image": "ghcr.io/josse-classroom-test/dep-1234:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "chipsalliance.verible",
+        "wavetrace.wavetrace",
+        "mshr-h.veriloghdl"
+      ]
+    }
+  }
+}
+
